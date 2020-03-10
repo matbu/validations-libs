@@ -69,9 +69,9 @@ class Run(object):
         self.log.debug('Running the validations with Ansible')
         results = []
         for playbook in playbooks:
-            artifacts_dir = v_utils.create_artifacts_dir(
+            validation_uuid, artifacts_dir = v_utils.create_artifacts_dir(
                 prefix=os.path.basename(playbook))
-            run_ansible = v_ansible()
+            run_ansible = v_ansible(validation_uuid)
             _playbook, _rc, _status = run_ansible.run(
                 workdir=artifacts_dir,
                 playbook=playbook,

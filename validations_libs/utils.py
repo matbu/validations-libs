@@ -133,11 +133,12 @@ def current_time():
 def create_artifacts_dir(dir_path=None, prefix=None):
     dir_path = (dir_path if dir_path else
                 constants.VALIDATION_ANSIBLE_ARTIFACT_PATH)
-    log_dir = "{}/{}_{}_{}".format(dir_path, str(uuid4()),
+    validation_uuid = str(uuid4())
+    log_dir = "{}/{}_{}_{}".format(dir_path, validation_uuid),
                                    (prefix if prefix else ''), current_time())
     try:
         os.makedirs(log_dir)
-        return log_dir
+        return validation_uuid, log_dir
     except OSError:
         LOG.exception("Error while creating Ansible artifacts log file."
                       "Please check the access rights for {}").format(log_dir)

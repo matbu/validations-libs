@@ -38,8 +38,9 @@ except NameError:
 
 class Ansible(object):
 
-    def __init__(self):
+    def __init__(self, uuid=None):
         self.log = logging.getLogger(__name__ + ".Ansible")
+        self.uuid = uuid
 
     def _playbook_check(self, play, playbook_dir=None):
         """Check if playbook exist"""
@@ -213,6 +214,9 @@ class Ansible(object):
         env['ANSIBLE_HOST_KEY_CHECKING'] = False
         env['ANSIBLE_TRANSPORT'] = connection
         env['ANSIBLE_CACHE_PLUGIN_TIMEOUT'] = 7200
+
+        if self.uuid:
+            env['ANSIBLE_UUID'] = self.uuid
 
         if connection == 'local':
             env['ANSIBLE_PYTHON_INTERPRETER'] = sys.executable
