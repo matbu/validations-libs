@@ -12,8 +12,8 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 #
+import datetime
 import glob
-import json
 import logging
 import os
 import six
@@ -22,6 +22,7 @@ import tempfile
 import yaml
 
 from validations_libs import constants
+from uuid import uuid4
 
 RED = "\033[1;31m"
 GREEN = "\033[0;32m"
@@ -125,6 +126,23 @@ class TempDirs(object):
         LOG.info("Temporary directory [ %s ] cleaned up" % self.dir)
 
 
+def current_time():
+    return '%sZ' % datetime.datetime.utcnow().isoformat()
+
+
+def create_artifacts_dir(dir_path=None, prefix=None):
+    dir_path = (dir_path if dir_path else
+                constants.VALIDATION_ANSIBLE_ARTIFACT_PATH)
+    log_dir = "{}/{}_{}_{}".format(dir_path, str(uuid4()),
+                                   (prefix if prefix else ''), current_time())
+    try:
+        os.makedirs(log_dir)
+        return log_dir
+    except OSError:
+        LOG.exception("Error while creating Ansible artifacts log file."
+                      "Please check the access rights for {}").format(log_dir)
+
+
 def parse_all_validations_on_disk(path, groups=None):
     results = []
     validations_abspath = glob.glob("{path}/*.yaml".format(path=path))
@@ -224,11 +242,11 @@ def get_validation_group_name_list():
     return results
 
 
-def get_new_validations_logs_on_disk():
+def get_new_validations_logs_on_disk(validations_logs_dir):
     """Return a list of new log execution filenames """
     files = []
 
-    for root, dirs, filenames in os.walk(constants.VALIDATIONS_LOG_BASEDIR):
+    for root, dirs, filenames in os.walk(validations_logs_dir):
         files = [
             f for f in filenames if not f.startswith('processed')
             and os.path.splitext(f)[1] == '.json'
