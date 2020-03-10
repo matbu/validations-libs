@@ -134,7 +134,7 @@ def create_artifacts_dir(dir_path=None, prefix=None):
     dir_path = (dir_path if dir_path else
                 constants.VALIDATION_ANSIBLE_ARTIFACT_PATH)
     validation_uuid = str(uuid4())
-    log_dir = "{}/{}_{}_{}".format(dir_path, validation_uuid),
+    log_dir = "{}/{}_{}_{}".format(dir_path, validation_uuid,
                                    (prefix if prefix else ''), current_time())
     try:
         os.makedirs(log_dir)

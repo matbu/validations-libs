@@ -28,7 +28,7 @@ class TestValidatorRun(TestCase):
     @mock.patch('validations_libs.utils.parse_all_validations_on_disk')
     @mock.patch('validations_libs.ansible.Ansible.run')
     @mock.patch('validations_libs.utils.create_artifacts_dir',
-                return_value='/tmp/')
+                return_value=('1234', '/tmp/'))
     def test_validation_run_success(self, mock_tmp, mock_ansible_run,
                                     mock_validation_dir):
         mock_validation_dir.return_value = [{
@@ -42,10 +42,12 @@ class TestValidatorRun(TestCase):
         expected_run_return = [
             {'validation': {'playbook': 'foo.yaml',
                             'rc_code': 0,
-                            'status': 'successful'}},
+                            'status': 'successful',
+                            'validation_id': '1234'}},
             {'validation': {'playbook': 'foo.yaml',
                             'rc_code': 0,
-                            'status': 'successful'}}]
+                            'status': 'successful',
+                            'validation_id': '1234'}}]
 
         playbook = ['fake.yaml']
         inventory = 'tmp/inventory.yaml'
@@ -59,7 +61,7 @@ class TestValidatorRun(TestCase):
     @mock.patch('validations_libs.utils.parse_all_validations_on_disk')
     @mock.patch('validations_libs.ansible.Ansible.run')
     @mock.patch('validations_libs.utils.create_artifacts_dir',
-                return_value='/tmp/')
+                return_value=('1234', '/tmp/'))
     def test_validation_run_failed(self, mock_tmp, mock_ansible_run,
                                    mock_validation_dir):
         mock_validation_dir.return_value = [{
@@ -73,10 +75,12 @@ class TestValidatorRun(TestCase):
         expected_run_return = [
             {'validation': {'playbook': 'foo.yaml',
                             'rc_code': 0,
-                            'status': 'failed'}},
+                            'status': 'failed',
+                            'validation_id': '1234'}},
             {'validation': {'playbook': 'foo.yaml',
                             'rc_code': 0,
-                            'status': 'failed'}}]
+                            'status': 'failed',
+                            'validation_id': '1234'}}]
 
         playbook = ['fake.yaml']
         inventory = 'tmp/inventory.yaml'

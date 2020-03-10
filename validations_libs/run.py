@@ -91,5 +91,6 @@ class Run(object):
                             'playbook': _playbook,
                             'rc_code': _rc,
                             'status': _status,
+                            'validation_id': validation_uuid
                             }})
         return results
